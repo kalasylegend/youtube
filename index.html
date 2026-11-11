@@ -16,10 +16,9 @@ small{display:block;color:#ddd;line-height:1.5;margin-top:12px}
 <body>
 <main>
 <h2>Abrir en YouTube</h2>
-<p>Intentando abrir la aplicación de YouTube…</p>
+<p>Pulsa el botón para abrir el destino en YouTube.</p>
 <a id="app" href="https://www.youtube.com/@kalasylegend">Abrir en la app de YouTube</a>
 <a id="browser" class="secondary" href="https://www.youtube.com/@kalasylegend">Ver en el navegador</a>
-<small>Si Instagram bloquea la apertura automática, pulsa el botón rojo.</small>
 </main>
 <script>
 (function(){
@@ -44,13 +43,13 @@ function launch(target){
     appUrl=video?'youtube://'+video[1]:'youtube://www.youtube.com/@kalasylegend';
   }
   app.href=appUrl;
-  if(android||ios){window.location.href=appUrl;}
+  // No redirección automática: evita que Instagram reutilice el vídeo anterior.
 }
 if(validVideo){
   launch('https://www.youtube.com/watch?v='+encodeURIComponent(id));
 }else{
   // principal.txt contains a YouTube channel or video URL, one line only.
-  fetch('principal.txt',{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('missing');return r.text();}).then(function(t){
+  fetch('principal.txt?rev=2',{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('missing');return r.text();}).then(function(t){
     const line=t.trim().split(/\r?\n/)[0].trim();
     const u=new URL(line);
     if(!['youtube.com','www.youtube.com','m.youtube.com','youtu.be'].includes(u.hostname)||u.protocol!=='https:')throw Error('invalid');
